@@ -1,24 +1,23 @@
 
-# <application_license_badge>
-<!--- [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) --->
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE) 
 
-# BC Gov Terraform Template
+# AWS Workload Account Automation Setup
 
-This repo provides a starting point for users who want to create valid Terraform modules stored in GitHub.  
+This repo contains a Terraform module that is part of the tooling to provision access for automation (CI/CD) tools to a project team's accounts within an AWS Landing Zone.
+
+This module is used in conjunction with other modules that provide other "layers" to project accounts within a landing zone.  The modules are orchestrated using a `terragrunt` configuration that is contained in a private repository.     
 
 ## Third-Party Products/Libraries used and the licenses they are covered by
-<!--- product/library and path to the LICENSE --->
-<!--- Example: <library_name> - [![GitHub](<shield_icon_link>)](<path_to_library_LICENSE>) --->
+
+HashiCorp Terraform - [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
 ## Project Status
 - [x] Development
 - [ ] Production/Maintenance
 
-## Documentation
-<!--- Point to another readme or create a GitHub Pages (https://guides.github.com/features/pages/) --->
+## How To Use
 
-## Getting Started
-<!--- setup env vars, secrets, instructions... --->
+Note: This module is intended to be used by another "root" module, or as part of a `terragrunt` "stack" rather than on its own.  It doesn't do much on its own.
 
 ## Getting Help or Reporting an Issue
 <!--- Example below, modify accordingly --->
@@ -34,7 +33,6 @@ By participating in this project you agree to abide by its terms.
 
 
 ## License
-<!--- Example below, modify accordingly --->
     Copyright 2018 Province of British Columbia
 
     Licensed under the Apache License, Version 2.0 (the "License");
