@@ -15,5 +15,5 @@ variable "automation_role_name" {
 
 variable "pgp_key" {
 	type = string
-	description = "The pgp key to use to encrypt the secret access key."
+	description = "A base64 string containing the pgp key to use to encrypt the secret access key."
 }
