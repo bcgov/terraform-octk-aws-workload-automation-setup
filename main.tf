@@ -46,3 +46,10 @@ resource "aws_iam_user" "terraform_automation_project_user" {
 	path = "/project-service-accounts/"
 }
 
+resource "aws_iam_access_key" "terraform_automation_project_user_access_key" {
+	provider = aws.iam-security-account
+	user = aws_iam_user.terraform_automation_project_user.name
+	pgp_key = base64encode(var.pgp_key)
+}
+
+

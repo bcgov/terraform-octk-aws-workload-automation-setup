@@ -12,3 +12,8 @@ variable "automation_role_name" {
 	description = "The role used for executing automation commands in the environment."
 	type = string
 }
+
+variable "pgp_key" {
+	type = string
+	description = "The pgp key to use to encrypt the secret access key."
+}
