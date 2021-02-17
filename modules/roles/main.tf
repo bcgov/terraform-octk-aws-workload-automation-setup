@@ -30,6 +30,6 @@ resource "aws_iam_role_policy_attachment" "policy_arns" {
 
 resource "aws_iam_role_policy_attachment" "policy_json" {
   for_each   = { for policy in aws_iam_policy.this : policy.name => policy.arn }
-  role       = each.key
+  role       = aws_iam_role.this.name
   policy_arn = each.value
 }
