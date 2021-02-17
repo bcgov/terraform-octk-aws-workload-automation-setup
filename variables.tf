@@ -11,7 +11,7 @@ variable "project_config" {
   description = "project.json config."
 }
 
-variable "extra_service_accounts" {
+variable "project_service_accounts" {
   type        = list(string)
   description = "A list of names for addtional custom iam user service accounts."
 }

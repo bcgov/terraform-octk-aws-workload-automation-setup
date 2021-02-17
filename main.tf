@@ -50,17 +50,17 @@ resource "aws_iam_access_key" "terraform_automation_project_user_access_key" {
   pgp_key  = var.pgp_key
 }
 
-resource "aws_iam_user" "extra_project_user" {
-  for_each = toset(var.extra_service_accounts)
+resource "aws_iam_user" "project_user" {
+  for_each = toset(var.project_service_accounts)
   provider = aws.iam-security-account
   name     = "BCGOV_Project_User_${each.key}_${var.project_name}"
   path     = "/project-service-accounts/"
 }
 
-resource "aws_iam_access_key" "extra_project_user_access_key" {
-  for_each = toset(var.extra_service_accounts)
+resource "aws_iam_access_key" "project_user_access_key" {
+  for_each = toset(var.project_service_accounts)
   provider = aws.iam-security-account
-  user     = aws_iam_user.extra_project_user[each.key].name
+  user     = aws_iam_user.project_user[each.key].name
   # pgp_key  = var.pgp_key
 }
 

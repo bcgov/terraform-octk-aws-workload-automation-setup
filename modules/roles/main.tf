@@ -7,7 +7,7 @@ resource "aws_iam_role" "this" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "${var.iam_user_arn}"
+        "AWS": ${jsonencode(var.iam_user_arns)}
       },
       "Effect": "Allow"
     }
@@ -17,9 +17,9 @@ EOF
 }
 
 resource "aws_iam_policy" "this" {
-  for_each = { for policy in var.policies : policy.name => policy }
-  name     = each.key
-  policy   = jsonencode(each.value.inline_policy)
+  count  = var.policy_json == "" ? 0 : 1
+  name   = "${var.role_name}_inline_policy"
+  policy = var.policy_json
 }
 
 resource "aws_iam_role_policy_attachment" "policy_arns" {
@@ -28,8 +28,8 @@ resource "aws_iam_role_policy_attachment" "policy_arns" {
   policy_arn = each.key
 }
 
-resource "aws_iam_role_policy_attachment" "policies" {
-  for_each   = aws_iam_policy.this
-  role       = aws_iam_role.this.name
-  policy_arn = aws_iam_policy.this[each.key].arn
+resource "aws_iam_role_policy_attachment" "policy_json" {
+  for_each   = { for policy in aws_iam_policy.this : policy.name => policy.arn }
+  role       = each.key
+  policy_arn = each.value
 }

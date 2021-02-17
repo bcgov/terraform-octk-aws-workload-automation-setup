@@ -1,5 +1,6 @@
-variable "iam_user_arn" {
-  description = "ARN of AWS IAM user allowed to assume role"
+variable "iam_user_arns" {
+  description = "List of ARNs of AWS IAM user allowed to assume role"
+  type        = list(string)
 }
 
 variable "role_name" {
@@ -12,7 +13,8 @@ variable "policy_arns" {
   default     = []
 }
 
-variable "policies" {
-  description = "List of AWS policies"
-  default     = []
+variable "policy_json" {
+  description = "AWS policy JSON string"
+  type        = string
+  default     = ""
 }
