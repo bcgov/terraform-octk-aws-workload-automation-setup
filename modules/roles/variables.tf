@@ -16,5 +16,5 @@ variable "policy_arns" {
 variable "policy_json" {
   description = "AWS policy JSON string"
   type        = string
-  default     = ""
+  default     = "{}"
 }

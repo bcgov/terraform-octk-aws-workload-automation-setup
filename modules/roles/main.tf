@@ -17,7 +17,7 @@ EOF
 }
 
 resource "aws_iam_policy" "this" {
-  count  = var.policy_json == "" ? 0 : 1
+  count  = var.policy_json == "{}" ? 0 : 1
   name   = "${var.role_name}_inline_policy"
   policy = var.policy_json
 }
