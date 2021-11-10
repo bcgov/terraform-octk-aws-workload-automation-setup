@@ -8,6 +8,7 @@ output "secret_access_key" {
 }
 
 output "project_sa_access_keys" {
+  sensitive = true
   value = {
     for sa in var.project_service_accounts : sa => {
       access_key_id     = aws_iam_access_key.project_user_access_key[sa].id
