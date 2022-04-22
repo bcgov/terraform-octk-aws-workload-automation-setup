@@ -4,7 +4,8 @@ output "access_key_id" {
 }
 
 output "secret_access_key" {
-  value = aws_iam_access_key.terraform_automation_project_user_access_key.secret
+  sensitive = true
+  value     = aws_iam_access_key.terraform_automation_project_user_access_key.secret
 }
 
 output "project_sa_access_keys" {
