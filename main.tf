@@ -1,16 +1,6 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.45"
-    }
-  }
-}
-
 provider "aws" {
   region  = "ca-central-1"
   alias   = "master"
-  profile = "sea-terraform-automation"
 }
 
 module "lz_info" {
@@ -30,8 +20,6 @@ locals {
 provider "aws" {
   region  = "ca-central-1"
   alias   = "iam-security-account"
-  profile = "sea-terraform-automation"
-
   assume_role {
     role_arn     = "arn:aws:iam::${local.security_account.id}:role/${var.automation_role_name}"
     session_name = "slz-terraform-automation"
