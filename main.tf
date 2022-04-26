@@ -35,7 +35,7 @@ resource "aws_iam_user" "terraform_automation_project_user" {
 resource "aws_iam_access_key" "terraform_automation_project_user_access_key" {
   provider = aws.iam-security-account
   user     = aws_iam_user.terraform_automation_project_user.name
-  pgp_key  = var.pgp_key
+  # pgp_key  = var.pgp_key
 }
 
 resource "aws_iam_user" "project_user" {
