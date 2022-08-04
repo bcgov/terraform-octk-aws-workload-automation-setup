@@ -7,6 +7,10 @@ variable "role_name" {
   description = "Name of the AWS role to create and attach policy on"
 }
 
+variable "permissions_boundary" {
+  type        = string
+  description = "Name of the permissions_boundary attached"
+}
 variable "policy_arns" {
   description = "List of AWS policy ARNs"
   type        = list(string)
