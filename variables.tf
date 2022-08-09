@@ -20,4 +20,4 @@ variable "automation_role_name" {
   default     = "OrganizationAccountAccessRole"
   description = "The role used for executing automation commands in the environment."
   type        = string
-
+}
