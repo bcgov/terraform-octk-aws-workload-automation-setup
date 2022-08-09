@@ -1,6 +1,6 @@
 provider "aws" {
-  region  = "ca-central-1"
-  alias   = "master"
+  region = "ca-central-1"
+  alias  = "master"
 }
 
 module "lz_info" {
@@ -18,8 +18,8 @@ locals {
 }
 
 provider "aws" {
-  region  = "ca-central-1"
-  alias   = "iam-security-account"
+  region = "ca-central-1"
+  alias  = "iam-security-account"
   assume_role {
     role_arn     = "arn:aws:iam::${local.security_account.id}:role/${var.automation_role_name}"
     session_name = "slz-terraform-automation"
@@ -35,7 +35,6 @@ resource "aws_iam_user" "terraform_automation_project_user" {
 resource "aws_iam_access_key" "terraform_automation_project_user_access_key" {
   provider = aws.iam-security-account
   user     = aws_iam_user.terraform_automation_project_user.name
-  # pgp_key  = var.pgp_key
 }
 
 resource "aws_iam_user" "project_user" {
@@ -49,6 +48,5 @@ resource "aws_iam_access_key" "project_user_access_key" {
   for_each = toset(var.project_service_accounts)
   provider = aws.iam-security-account
   user     = aws_iam_user.project_user[each.key].name
-  # pgp_key  = var.pgp_key
 }
 
