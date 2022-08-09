@@ -1,6 +1,7 @@
 resource "aws_iam_role" "this" {
-  name               = var.role_name
-  assume_role_policy = <<EOF
+  name                 = var.role_name
+  permissions_boundary = var.permissions_boundary
+  assume_role_policy   = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
