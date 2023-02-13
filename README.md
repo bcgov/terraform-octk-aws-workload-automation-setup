@@ -15,9 +15,12 @@ HashiCorp Terraform - [![License: MPL 2.0](https://img.shields.io/badge/License-
 - [x] Development
 - [ ] Production/Maintenance
 
-## How To Use
+# How To Use
 
 Note: This module is intended to be used by another "root" module, or as part of a `terragrunt` "stack" rather than on its own.  It doesn't do much on its own.
+
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->
 
 ## Getting Help or Reporting an Issue
 <!--- Example below, modify accordingly --->
