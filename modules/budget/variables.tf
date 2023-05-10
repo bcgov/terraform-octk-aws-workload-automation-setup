@@ -22,5 +22,5 @@ variable "email_recipients" {
 variable "threshold_percentages" {
   type        = list(number)
   description = "A list of percentages to trigger notifications."
-  default     = [50, 80, 100]
+  default     = [80, 100]
 }
