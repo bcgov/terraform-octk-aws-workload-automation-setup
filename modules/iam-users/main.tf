@@ -1,8 +1,27 @@
-# Create an Empty IAM user
-resource "aws_iam_user" "service_account" {
-  for_each = toset(var.service_accounts)
-  name     = each.value
+# Create DynamoDB table for clients to add entries
+resource "aws_dynamodb_table" "service_account_table" {
+  name           = var.table_name # Update with your preferred table name
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "UserName"
+
+  attribute {
+    name = "UserName"
+    type = "S"
+  }
+
+  # Enabling Stream for New Image (captures new entries)
+  stream_enabled   = true
+  stream_view_type = "NEW_IMAGE"
 }
+
+# DynamoDB Stream to Lambda Event Source Mapping
+resource "aws_lambda_event_source_mapping" "example" {
+  event_source_arn  = aws_dynamodb_table.service_account_table.stream_arn
+  function_name     = aws_lambda_function.key_rotation.function_name
+  starting_position = "TRIM_HORIZON"
+}
+
 
 # Create an IAM role for the lambda function that rotates keys
 resource "aws_iam_role" "lambda_exec_role" {
@@ -33,24 +52,61 @@ resource "aws_iam_policy" "lambda_permissions" {
       {
         Effect = "Allow",
         Action = [
+          "iam:ListUsers",
+          "iam:GetUser",
+          "iam:CreateUser",
+          "iam:DeleteUser",
+          "iam:ListAccessKeys",
           "iam:CreateAccessKey",
           "iam:DeleteAccessKey",
-          "iam:ListAccessKeys",
           "iam:TagUser",
           "iam:UntagUser",
-          "iam:ListUserTags"
+          "iam:ListUserTags",
+          "iam:PutUserPermissionsBoundary",
+          "iam:DeleteUserPermissionsBoundary"
         ],
-        Resource = "arn:aws:iam::*:user/${aws_iam_user.this.name}"
+        Resource = "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:Scan",
+          "dynamodb:GetItem",
+          "dynamodb:GetRecords",
+          "dynamodb:GetShardIterator",
+          "dynamodb:DescribeStream",
+          "dynamodb:ListStreams"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ssm:PutParameter",
+          "ssm:GetParameter",
+          "ssm:DeleteParameter"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        "Resource" : "*"
       },
       {
         Effect = "Allow",
         Action = [
-          "secretsmanager:CreateSecret",
-          "secretsmanager:DeleteSecret",
-          "secretsmanager:GetSecretValue",
-          "secretsmanager:UpdateSecret"
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
         ],
-        Resource = "*"
+        Resource = "arn:aws:logs:*:*:*"
       }
     ]
   })
@@ -62,44 +118,63 @@ resource "aws_iam_role_policy_attachment" "lambda_permissions_attach" {
   policy_arn = aws_iam_policy.lambda_permissions.arn
 }
 
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_file = "${path.module}/lambda/lambda.py"
+  output_path = "${path.module}/lambda/lambda.zip"
+}
 # Create a Lambda function
 resource "aws_lambda_function" "key_rotation" {
-  function_name = var.function_name
-  filename      = "./lambda/lambda.py"
-  handler       = "lambda.lambda_handler" # Modify this based on your specific handler configuration
-  runtime       = "Python 3.11"
-  role          = aws_iam_role.lambda_exec_role.arn
+  function_name    = var.function_name
+  filename         = data.archive_file.lambda_zip.output_path
+  handler          = "lambda.lambda_handler" # Modify this based on your specific handler configuration
+  runtime          = "python3.9"
+  timeout          = 300
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  role             = aws_iam_role.lambda_exec_role.arn
+  environment {
+    variables = {
+      DYNAMODB_TABLE_NAME = aws_dynamodb_table.service_account_table.name
+    }
+  }
 }
 
 # Create a Cloud watch event rule for every 5 minutes
-resource "aws_cloudwatch_event_rule" "every_five_minutes" {
-  name                = "every-five-minutes"
-  schedule_expression = "rate(5 minutes)"
+resource "aws_cloudwatch_event_rule" "every_hour" {
+  name                = "every-hour"
+  schedule_expression = "rate(1 hour)"
 }
 
 # Set the Lambda function to run every 5 minutes
-resource "aws_cloudwatch_event_target" "every_five_minutes_target" {
-  rule      = aws_cloudwatch_event_rule.every_five_minutes.name
+resource "aws_cloudwatch_event_target" "every_hour_target" {
+  rule      = aws_cloudwatch_event_rule.every_hour.name
   target_id = "LambdaFunction"
   arn       = aws_lambda_function.key_rotation.arn
 }
 
-# Create a Cloudwatch event rule to detect IAM User Creation
-resource "aws_cloudwatch_event_rule" "iam_user_creation" {
-  name = "iam-user-creation"
-  event_pattern = jsonencode({
-    "source" : ["aws.iam"],
-    "detail-type" : ["AWS API Call via CloudTrail"],
-    "detail" : {
-      "eventSource" : ["iam.amazonaws.com"],
-      "eventName" : ["CreateUser"]
-    }
+# Grant permission for the every-five-minutes event to invoke the Lambda function
+resource "aws_lambda_permission" "allow_cloudwatch_every_five_minutes" {
+  statement_id  = "AllowExecutionFromCloudWatchEveryFiveMinutes"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.key_rotation.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.every_hour.arn
+}
+
+# Permission boundary
+resource "aws_iam_policy" "s3_full_access_boundary" {
+  name        = "BCGOV_IAM_USER_BOUNDARY_POLICY"
+  path        = "/"
+  description = "Permission boundary policy for full S3 access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "s3:*",
+        Resource = "*"
+      }
+    ]
   })
-}
-
-# Set the Lambda function to run when IAM User is Created
-resource "aws_cloudwatch_event_target" "iam_user_creation_target" {
-  rule      = aws_cloudwatch_event_rule.iam_user_creation.name
-  target_id = "LambdaFunction"
-  arn       = aws_lambda_function.key_rotation.arn
 }

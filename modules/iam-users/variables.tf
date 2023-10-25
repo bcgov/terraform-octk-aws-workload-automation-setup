@@ -2,10 +2,8 @@ variable "function_name" {
   description = "Name of the lambda function"
 }
 
-variable "service_accounts" {
-  description = "List of service accounts to create as IAM users"
-  type        = list(string)
-  default     = []
+variable "table_name" {
+  description = "Name of the DynamoDB table created in the account for creating IAM Users"
 }
 
 variable "role_name" {
