@@ -69,7 +69,7 @@ def handle_iam_user(user_name):
             logger.info("No key present, Creating current key")
             create_and_manage_key(user_name, 'current')
         elif current_key and not pending_deletion_key and current_key['age'] >= 15:
-            logger.info("Current key age is older than 5 minutes, Creating New key and renaming keys")
+            logger.info("Current key age is older than 15 days, Creating New key and renaming keys")
             rotate_keys_and_update_tags(user_name, current_key, pending_deletion_key)
         elif current_key and pending_deletion_key and pending_deletion_key['age'] >= 30:
             logger.info("Key age expired, Rotationg keys")
