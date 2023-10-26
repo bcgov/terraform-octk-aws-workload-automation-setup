@@ -177,9 +177,9 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         Resource = "*"
       },
       {
-        Sid      = "SSMandKMSAccess",
-        Effect   = "Allow",
-        Action   = [
+        Sid    = "SSMandKMSAccess",
+        Effect = "Allow",
+        Action = [
           "ssm:GetParameter",
           "ssm:GetParameters",
           "ssm:GetParametersByPath",
