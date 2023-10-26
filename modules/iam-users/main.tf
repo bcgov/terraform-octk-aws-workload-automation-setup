@@ -174,6 +174,20 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         Effect   = "Allow",
         Action   = "s3:*",
         Resource = "*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ],
+        Resource = "arn:aws:ssm:*:*:parameter/iam_users/*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = "kms:Decrypt",
+        Resource = "arn:aws:kms:*:*:key/*"
       }
     ]
   })
