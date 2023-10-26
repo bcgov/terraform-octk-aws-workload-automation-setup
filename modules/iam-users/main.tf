@@ -176,8 +176,8 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         Resource = "*"
       },
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "ssm:GetParameter",
           "ssm:GetParameters",
           "ssm:GetParametersByPath"
