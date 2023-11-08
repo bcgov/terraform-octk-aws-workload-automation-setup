@@ -94,7 +94,7 @@ The function will automatically check the age of the access keys:
     "SecretAccessKey": "Secret_Access_Key_Current"
   }
 }
-``````
+```
 
 - The permission boundary also allows users to read keys from SSM parameter store. 
 - Users can implement a checker in their automation scripts to verify if they are using a 'pending_deletion' key. If so, the script should automatically rotate to the 'current' key fetched from the Parameter Store.
