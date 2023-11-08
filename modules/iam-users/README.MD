@@ -77,6 +77,28 @@ The function will automatically check the age of the access keys:
 - If the current key is older than 15 days, it will create a new key and mark the old key for deletion.
 - If a key marked for deletion is 30 days old, it will be deleted.
 
+### Reading Keys from SSM parameter store
+
+- The lambda function automatically stores the keys created for users in the SSM parameter store, Users can get the keys from the parameter store and setup automation. 
+
+#### JSON Data Structure of Stored Keys
+
+```json
+{
+  "pending_deletion": {
+    "AccessKeyID": "Access_Key_ID_Pending_Deletion",
+    "SecretAccessKey": "Secret_Access_Key_Pending_Deletion"
+  },
+  "current": {
+    "AccessKeyID": "Access_Key_ID_Current",
+    "SecretAccessKey": "Secret_Access_Key_Current"
+  }
+}
+``````
+
+- The permission boundary also allows users to read keys from SSM parameter store. 
+- Users can implement a checker in their automation scripts to verify if they are using a 'pending_deletion' key. If so, the script should automatically rotate to the 'current' key fetched from the Parameter Store.
+
 ### Deleting an IAM User
 
 Remove the corresponding entry from the DynamoDB table. The Lambda function will trigger and delete the user and their access keys from IAM and the SSM Parameter Store.
