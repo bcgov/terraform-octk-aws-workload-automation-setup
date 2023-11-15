@@ -1,6 +1,6 @@
 import json
 import boto3
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import logging
 import time
 import os
@@ -68,10 +68,10 @@ def handle_iam_user(user_name):
         if not current_key:
             logger.info("No key present, Creating current key")
             create_and_manage_key(user_name, 'current')
-        elif current_key and not pending_deletion_key and current_key['age'] >= 15:
+        elif current_key and not pending_deletion_key and current_key['age'] >= timedelta(days=2):
             logger.info("Current key age is older than 15 days, Creating New key and renaming keys")
             rotate_keys_and_update_tags(user_name, current_key, pending_deletion_key)
-        elif current_key and pending_deletion_key and pending_deletion_key['age'] >= 30:
+        elif current_key and pending_deletion_key and pending_deletion_key['age'] >= timedelta(days=4):
             logger.info("Key age expired, Rotationg keys")
             rotate_keys_and_update_tags(user_name, current_key, pending_deletion_key)
         else:
@@ -104,7 +104,7 @@ def get_key_details(user_name):
     for key in existing_keys:
         key_id = key['AccessKeyId']
         create_date = key['CreateDate']
-        age = (datetime.now(timezone.utc) - create_date).days # age in days
+        age = datetime.now(timezone.utc) - create_date
         
         tags = iam_client.list_user_tags(UserName=user_name)
         for tag in tags['Tags']:
