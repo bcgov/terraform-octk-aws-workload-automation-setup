@@ -56,6 +56,8 @@ resource "aws_iam_policy" "lambda_permissions" {
           "iam:GetUser",
           "iam:CreateUser",
           "iam:DeleteUser",
+          "iam:ListAttachedUserPolicies",
+          "iam:DetachUserPolicy",
           "iam:ListAccessKeys",
           "iam:CreateAccessKey",
           "iam:DeleteAccessKey",
