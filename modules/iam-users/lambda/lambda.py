@@ -189,6 +189,12 @@ def handle_iam_user_removal(user_name):
         except iam_client.exceptions.NoSuchEntityException:
             # No permissions boundary was attached, so just move on
             logger.info(f"No permissions boundary attached to IAM user: {user_name}")
+
+        # Detach all policies attached to the user
+        attached_policies = iam_client.list_attached_user_policies(UserName=user_name)
+        for policy in attached_policies['AttachedPolicies']:
+            iam_client.detach_user_policy(UserName=user_name, PolicyArn=policy['PolicyArn'])
+            logger.info(f"Detached policy {policy['PolicyArn']} from IAM user: {user_name}")            
         
         # List and delete access keys associated with the user
         keys = iam_client.list_access_keys(UserName=user_name)
