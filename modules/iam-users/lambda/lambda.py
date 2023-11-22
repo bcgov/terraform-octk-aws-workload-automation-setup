@@ -195,7 +195,13 @@ def handle_iam_user_removal(user_name):
         for policy in attached_policies['AttachedPolicies']:
             iam_client.detach_user_policy(UserName=user_name, PolicyArn=policy['PolicyArn'])
             logger.info(f"Detached policy {policy['PolicyArn']} from IAM user: {user_name}")            
-        
+
+        # Deactivate and delete all MFA devices associated with the user
+        mfa_devices = iam_client.list_mfa_devices(UserName=user_name)
+        for mfa_device in mfa_devices['MFADevices']:
+            iam_client.deactivate_mfa_device(UserName=user_name, SerialNumber=mfa_device['SerialNumber'])
+            logger.info(f"Deactivated MFA device {mfa_device['SerialNumber']} for IAM user: {user_name}")        
+            
         # List and delete access keys associated with the user
         keys = iam_client.list_access_keys(UserName=user_name)
         for key in keys['AccessKeyMetadata']:
