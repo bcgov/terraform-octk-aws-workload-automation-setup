@@ -57,6 +57,8 @@ resource "aws_iam_policy" "lambda_permissions" {
           "iam:CreateUser",
           "iam:DeleteUser",
           "iam:ListAttachedUserPolicies",
+          "iam:ListMFADevices",
+          "iam:DeactivateMFADevice",
           "iam:DetachUserPolicy",
           "iam:ListAccessKeys",
           "iam:CreateAccessKey",
