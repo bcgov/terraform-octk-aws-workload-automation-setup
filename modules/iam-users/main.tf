@@ -142,7 +142,23 @@ resource "aws_lambda_function" "key_rotation" {
     }
   }
 }
-
+# Create a cloudwatch alarm that monitors IAM users lambda failures
+resource "aws_cloudwatch_metric_alarm" "key_rotation_lambda_function" {
+  alarm_name          = var.alarm_name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "1"
+  datapoints_to_alarm = "1"
+  alarm_description   = "Monitor IAM users lambda for errors"
+  alarm_actions       = [var.sns_arn]
+  dimensions = {
+    FunctionName = var.function_name
+  }
+}
 # Create a Cloud watch event rule for every 5 minutes
 resource "aws_cloudwatch_event_rule" "every_hour" {
   name                = "every-hour"

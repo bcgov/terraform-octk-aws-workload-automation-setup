@@ -13,3 +13,10 @@ variable "role_name" {
 variable "policy_name" {
   description = "Name of the policy created for the lambda function"
 }
+variable "alarm_name" {
+  description = "name of the cloudwatch alarm"
+}
+
+variable "sns_arn" {
+  description = "name of the sns topic arn for cloudwatch arn"
+}
