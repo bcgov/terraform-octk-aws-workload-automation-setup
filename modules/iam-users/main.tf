@@ -185,7 +185,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_every_five_minutes" {
 resource "aws_iam_policy" "s3_full_access_boundary" {
   name        = "BCGOV_IAM_USER_BOUNDARY_POLICY"
   path        = "/"
-  description = "Permission boundary policy for full S3 access"
+  description = "Permission boundary policy for the BC Gov IAM user service"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -194,6 +194,12 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         Sid      = "S3FullAccess",
         Effect   = "Allow",
         Action   = "s3:*",
+        Resource = "*"
+      },
+      {
+        Sid      = "SESFullAccess",
+        Effect   = "Allow",
+        Action   = "ses:*",
         Resource = "*"
       },
       {
