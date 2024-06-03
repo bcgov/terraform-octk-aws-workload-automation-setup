@@ -182,7 +182,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_every_five_minutes" {
 }
 
 # Permission boundary
-resource "aws_iam_policy" "user_access_boundary" {
+resource "aws_iam_policy" "s3_full_access_boundary" {
   name        = "BCGOV_IAM_USER_BOUNDARY_POLICY"
   path        = "/"
   description = "Permission boundary policy for the BC Gov IAM user service"
