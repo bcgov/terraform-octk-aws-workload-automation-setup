@@ -203,6 +203,12 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         Resource = "*"
       },
       {
+        Sid      = "BedrockFullAccess",
+        Effect   = "Allow",
+        Action   = "bedrock:*",
+        Resource = "*"
+      },
+      {
         Sid    = "SSMandKMSAccess",
         Effect = "Allow",
         Action = [
