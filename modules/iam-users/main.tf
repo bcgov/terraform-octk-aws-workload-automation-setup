@@ -187,60 +187,68 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
   path        = "/"
   description = "Permission boundary policy for the BC Gov IAM user service"
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Sid      = "S3FullAccess",
-        Effect   = "Allow",
-        Action   = "s3:*",
-        Resource = "*"
-      },
-      {
-        Sid      = "SESFullAccess",
-        Effect   = "Allow",
-        Action   = "ses:*",
-        Resource = "*"
-      },
-      {
-        Sid      = "BedrockFullAccess",
-        Effect   = "Allow",
-        Action   = "bedrock:*",
-        Resource = "*"
-      },
-      {
-        "Sid" : "SQSFullAccess",
-        "Effect" : "Allow",
-        "Action" : "sqs:*",
-        "Resource" : "*"
-      },
-      {
-        "Sid" : "AllowSecretsManagerFullAccessToExternalSecrets",
-        "Effect" : "Allow",
-        "Action" : [
-          "secretsmanager:*"
-        ],
-        "Resource" : "arn:aws:secretsmanager:*:*:secret:external/*"
-      },
-      {
-        "Sid" : "SSMAccess",
-        "Effect" : "Allow",
-        "Action" : [
-          "ssm:GetParameter",
-          "ssm:GetParameters",
-          "ssm:GetParametersByPath"
-        ],
-        "Resource" : "arn:aws:ssm:*:*:parameter/iam_users/*"
-      },
-      {
-        "Sid" : "KMSAccess",
-        "Effect" : "Allow",
-        "Action" : [
-          "kms:Decrypt",
-          "kms:Encrypt"
-        ],
-        "Resource" : "arn:aws:kms:*:*:key/*"
-      }
-    ]
-  })
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3FullAccess",
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "SESFullAccess",
+      "Effect": "Allow",
+      "Action": "ses:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "BedrockFullAccess",
+      "Effect": "Allow",
+      "Action": "bedrock:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "SQSFullAccess",
+      "Effect": "Allow",
+      "Action": "sqs:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowSecretsManagerFullAccessToExternalSecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:*"
+      ],
+      "Resource": "arn:aws:secretsmanager:*:*:secret:external/*"
+    },
+    {
+      "Sid": "AllowSSMFullAccessToExternalParameters",
+      "Effect": "Allow",
+      "Action": "ssm:*",
+      "Resource": "arn:aws:ssm:*:*:parameter/external/*"
+    },
+    {
+      "Sid": "SSMAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath"
+      ],
+      "Resource": "arn:aws:ssm:*:*:parameter/iam_users/*"
+    },
+    {
+      "Sid": "KMSAccess",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt"
+      ],
+      "Resource": "arn:aws:kms:*:*:key/*"
+    }
+  ]
+}
+EOF
 }
