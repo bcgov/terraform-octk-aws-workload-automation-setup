@@ -209,18 +209,37 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         Resource = "*"
       },
       {
-        Sid    = "SSMandKMSAccess",
-        Effect = "Allow",
-        Action = [
+        "Sid" : "SQSFullAccess",
+        "Effect" : "Allow",
+        "Action" : "sqs:*",
+        "Resource" : "*"
+      },
+      {
+        "Sid" : "AllowSecretsManagerFullAccessToExternalSecrets",
+        "Effect" : "Allow",
+        "Action" : [
+          "secretsmanager:*"
+        ],
+        "Resource" : "arn:aws:secretsmanager:*:*:secret:external/*"
+      },
+      {
+        "Sid" : "SSMAccess",
+        "Effect" : "Allow",
+        "Action" : [
           "ssm:GetParameter",
           "ssm:GetParameters",
-          "ssm:GetParametersByPath",
-          "kms:Decrypt"
+          "ssm:GetParametersByPath"
         ],
-        Resource = [
-          "arn:aws:ssm:*:*:parameter/iam_users/*",
-          "arn:aws:kms:*:*:key/*"
-        ]
+        "Resource" : "arn:aws:ssm:*:*:parameter/iam_users/*"
+      },
+      {
+        "Sid" : "KMSAccess",
+        "Effect" : "Allow",
+        "Action" : [
+          "kms:Decrypt",
+          "kms:Encrypt"
+        ],
+        "Resource" : "arn:aws:kms:*:*:key/*"
       }
     ]
   })
