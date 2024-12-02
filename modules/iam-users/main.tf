@@ -111,6 +111,18 @@ resource "aws_iam_policy" "lambda_permissions" {
           "logs:PutLogEvents"
         ],
         Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "textract:AnalyzeDocument",
+          "textract:DetectDocumentText",
+          "textract:GetDocumentAnalysis",
+          "textract:GetDocumentTextDetection",
+          "textract:StartDocumentAnalysis",
+          "textract:StartDocumentTextDetection"
+        ],
+        "Resource" : "*"
       }
     ]
   })
