@@ -111,18 +111,6 @@ resource "aws_iam_policy" "lambda_permissions" {
           "logs:PutLogEvents"
         ],
         Resource = "arn:aws:logs:*:*:*"
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "textract:AnalyzeDocument",
-          "textract:DetectDocumentText",
-          "textract:GetDocumentAnalysis",
-          "textract:GetDocumentTextDetection",
-          "textract:StartDocumentAnalysis",
-          "textract:StartDocumentTextDetection"
-        ],
-        "Resource" : "*"
       }
     ]
   })
@@ -259,7 +247,20 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
         "kms:Encrypt"
       ],
       "Resource": "arn:aws:kms:*:*:key/*"
-    }
+    },
+    {
+      "Sid": "TextractAccess",
+      "Effect" : "Allow",
+      "Action" : [
+        "textract:AnalyzeDocument",
+        "textract:DetectDocumentText",
+        "textract:GetDocumentAnalysis",
+        "textract:GetDocumentTextDetection",
+        "textract:StartDocumentAnalysis",
+        "textract:StartDocumentTextDetection"
+      ],
+      "Resource" : "*"
+    }    
   ]
 }
 EOF
