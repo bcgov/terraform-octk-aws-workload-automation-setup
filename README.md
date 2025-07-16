@@ -24,13 +24,13 @@ Note: This module is intended to be used by another "root" module, or as part of
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.57.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws.iam-security-account"></a> [aws.iam-security-account](#provider\_aws.iam-security-account) | ~> 4.0 |
+| <a name="provider_aws.iam-security-account"></a> [aws.iam-security-account](#provider\_aws.iam-security-account) | 5.57.0 |
 
 ## Modules
 
@@ -42,10 +42,10 @@ Note: This module is intended to be used by another "root" module, or as part of
 
 | Name | Type |
 |------|------|
-| [aws_iam_access_key.project_user_access_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key) | resource |
-| [aws_iam_access_key.terraform_automation_project_user_access_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key) | resource |
-| [aws_iam_user.project_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
-| [aws_iam_user.terraform_automation_project_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
+| [aws_iam_access_key.project_user_access_key](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_access_key) | resource |
+| [aws_iam_access_key.terraform_automation_project_user_access_key](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_access_key) | resource |
+| [aws_iam_user.project_user](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_user) | resource |
+| [aws_iam_user.terraform_automation_project_user](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_user) | resource |
 
 ## Inputs
 
