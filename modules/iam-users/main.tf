@@ -244,7 +244,8 @@ resource "aws_iam_policy" "s3_full_access_boundary" {
       "Effect": "Allow",
       "Action": [
         "kms:Decrypt",
-        "kms:Encrypt"
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
       ],
       "Resource": "arn:aws:kms:*:*:key/*"
     },
