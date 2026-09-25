@@ -132,7 +132,7 @@ resource "aws_lambda_function" "key_rotation" {
   function_name    = var.function_name
   filename         = data.archive_file.lambda_zip.output_path
   handler          = "lambda.lambda_handler" # Modify this based on your specific handler configuration
-  runtime          = "python3.9"
+  runtime          = "python3.12"
   timeout          = 300
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   role             = aws_iam_role.lambda_exec_role.arn
